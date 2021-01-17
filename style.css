@@ -1,0 +1,22 @@
+header{
+    position: sticky;
+    top: 0%;
+    }
+
+main div {
+    border: 50% palevioletred ;
+     
+    position: absolute;
+    display: inline-block;
+}
+
+div img {
+    width: 30%;
+    height: 30%;
+}
+
+footer{
+    bottom: 0%;
+    position: sticky;
+
+}
