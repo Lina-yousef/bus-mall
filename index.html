@@ -17,12 +17,14 @@
     </header>
 
     <main>
-        <label for="numOfRounds"></label>
-        <input type="number" name="numOfRounds" id="numOfRounds">
+        <form action="">
+            <label for="numOfRounds"></label>
+            <input type="number" name="numOfRounds" id="numOfRounds">
+            <input type="submit" value="Set rounds" id="submitRound">
+        </form>
 
 
-
-        <div>
+        <div id="imgDiv">
             <img id="firstImg" src="" alt="">
             <img id="secondImg" src="" alt="">
             <img id="thirdImg" src="" alt="">
@@ -32,10 +34,12 @@
             <ul id=resultList>
             </ul>
         </aside>
+        <canvas id="productChart"></canvas>
     </main>
 
 
     <footer> Footer </footer>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
     <script src="app.js">
 

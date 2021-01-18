@@ -7,6 +7,12 @@ var firstImageIndex;
 var secondImageIndex;
 var thirdImageIndex;
 
+var vote = [];
+
+var names = [];
+
+var imgRound = [];
+
 var firstImageElement = document.getElementById('firstImg');
 var secondImageElement = document.getElementById('secondImg');
 var thirdImageElement = document.getElementById('thirdImg');
@@ -15,9 +21,9 @@ function Products(name, source) {
     this.name = name;
     this.source = source;
     this.showenImgTimes = 0;
-    this.vote=0;
+    this.vote = 0;
 
-    Products.prototype.allProducts.push(this);    
+    Products.prototype.allProducts.push(this);
 }
 
 Products.prototype.allProducts = [];
@@ -44,40 +50,44 @@ new Products('wine-glass', 'img/wine-glass.jpg');
 
 
 function generateRandomIndex() {
-   return Math.floor(Math.random() * Products.prototype.allProducts.length);
+    return Math.floor(Math.random() * Products.prototype.allProducts.length);
 }
 rendernThreeRandomImages();
 
 function rendernThreeRandomImages() {
 
-    // var firstImageIndex ;
-    // var secondImageIndex ;
-    // var thirdImageIndex ;
-    console.log('Hi'); 
+    console.log('Hi');
 
     firstImageIndex = generateRandomIndex();
-    console.log(firstImageIndex+'Hi'); 
+    console.log(firstImageIndex + 'Hi');
+
     do {
         secondImageIndex = generateRandomIndex();
         thirdImageIndex = generateRandomIndex();
+
+        do {
+            firstImageIndex = generateRandomIndex();
+            secondImageIndex = generateRandomIndex();
+            thirdImageIndex = generateRandomIndex();
+        } while (imgRound.includes(firstImageIndex) || imgRound.includes(secondImageIndex) || imgRound.includes(thirdImageIndex))
     }
-    while (secondImageIndex === firstImageIndex || secondImageIndex === thirdImageIndex || firstImageIndex === thirdImageIndex );
-   
+    while (secondImageIndex === firstImageIndex || secondImageIndex === thirdImageIndex || firstImageIndex === thirdImageIndex);
+    console.log(imgRound)
+    imgRound = [firstImageIndex, secondImageIndex, thirdImageIndex]
+
     Products.prototype.allProducts[firstImageIndex].showenImgTimes++;
     Products.prototype.allProducts[secondImageIndex].showenImgTimes++;
     Products.prototype.allProducts[thirdImageIndex].showenImgTimes++;
-
 
     firstImageElement.src = Products.prototype.allProducts[firstImageIndex].source;
     secondImageElement.src = Products.prototype.allProducts[secondImageIndex].source;
     thirdImageElement.src = Products.prototype.allProducts[thirdImageIndex].source;
 };
 
-
 function handleClick(event) {
     console.log(event.target.id);
     userAttemptCounter++;
-    if (userAttemptCounter < maxAttempt ) {
+    if (userAttemptCounter < maxAttempt) {
         if (event.target.id === 'firstImg') {
             Products.prototype.allProducts[firstImageIndex].vote++;
         }
@@ -90,21 +100,61 @@ function handleClick(event) {
         rendernThreeRandomImages();
     } else {
 
+        ///// Vote Array
+        for (var i = 0; i < Products.prototype.allProducts.length; i++) {
+            vote.push(Products.prototype.allProducts[i].vote);
+
+        }
+
         var resultList = document.getElementById('resultList');
         var productResult = 0
         for (var i = 0; i < Products.prototype.allProducts.length; i++) {
             productResult = document.createElement('li');
             resultList.appendChild(productResult);
-            productResult.textContent = Products.prototype.allProducts[i].name + ' had ' +  Products.prototype.allProducts[i].vote+ ' votes ' +
-                ', and was seen '+ Products.prototype.allProducts[i].showenImgTimes +' times'
+            productResult.textContent = Products.prototype.allProducts[i].name + ' had ' + Products.prototype.allProducts[i].vote + ' votes ' +
+                ', and was seen ' + Products.prototype.allProducts[i].showenImgTimes + ' times'
+
+            ////// Chart 
+            var ctx = document.getElementById('productChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: names,
+                    datasets: [{
+                        label: 'Product Chart',
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: vote
+                    }]
+                },
+                // Configuration options go here
+                options: {}
+            });
         }
         firstImageElement.removeEventListener('click', handleClick);
-secondImageElement.removeEventListener('click', handleClick);
-thirdImageElement.removeEventListener('click', handleClick);
+        secondImageElement.removeEventListener('click', handleClick);
+        thirdImageElement.removeEventListener('click', handleClick);
     }
 }
-    
 // handleClick();
 firstImageElement.addEventListener('click', handleClick);
 secondImageElement.addEventListener('click', handleClick);
 thirdImageElement.addEventListener('click', handleClick);
+
+var button = document.getElementById('submitRound');
+button.addEventListener('click', setMax);
+
+function setMax(event) {
+    event.preventDefault();
+    maxAttempt = document.getElementById('numOfRounds').value;
+    console.log(maxAttempt);
+}
+
+
+////Names Array
+for (var i = 0; i < Products.prototype.allProducts.length; i++) {
+    names.push(Products.prototype.allProducts[i].name);
+}
