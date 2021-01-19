@@ -7,6 +7,7 @@ var firstImageIndex;
 var secondImageIndex;
 var thirdImageIndex;
 
+var showenTime = [];
 var vote = [];
 
 var names = [];
@@ -87,7 +88,8 @@ function rendernThreeRandomImages() {
 function handleClick(event) {
     console.log(event.target.id);
     userAttemptCounter++;
-    if (userAttemptCounter < maxAttempt) {
+
+    if (userAttemptCounter <= maxAttempt) {
         if (event.target.id === 'firstImg') {
             Products.prototype.allProducts[firstImageIndex].vote++;
         }
@@ -98,12 +100,17 @@ function handleClick(event) {
             Products.prototype.allProducts[thirdImageIndex].vote++;
         }
         rendernThreeRandomImages();
+        // productStorage();
+        
+        console.log(rendernThreeRandomImages);
+        // console.log('product storage',productStorage);
+
     } else {
 
         ///// Vote Array
-        for (var i = 0; i < Products.prototype.allProducts.length; i++) {
+        for (var i = 0; i <  Products.prototype.allProducts.length; i++) {
             vote.push(Products.prototype.allProducts[i].vote);
-
+            showenTime.push(Products.prototype.allProducts[i].showenImgTimes);
         }
 
         var resultList = document.getElementById('resultList');
@@ -111,28 +118,16 @@ function handleClick(event) {
         for (var i = 0; i < Products.prototype.allProducts.length; i++) {
             productResult = document.createElement('li');
             resultList.appendChild(productResult);
-            productResult.textContent = Products.prototype.allProducts[i].name + ' had ' + Products.prototype.allProducts[i].vote + ' votes ' +
-                ', and was seen ' + Products.prototype.allProducts[i].showenImgTimes + ' times'
+            productResult.textContent = Products.prototype.allProducts[i].name +
+             ' had ' + Products.prototype.allProducts[i].vote + ' votes ' +
+                ', and was seen ' + Products.prototype.allProducts[i].showenImgTimes + ' times';
+               
 
-            ////// Chart 
-            var ctx = document.getElementById('productChart').getContext('2d');
-            var chart = new Chart(ctx, {
-                // The type of chart we want to create
-                type: 'line',
 
-                // The data for our dataset
-                data: {
-                    labels: names,
-                    datasets: [{
-                        label: 'Product Chart',
-                        backgroundColor: 'rgb(255, 99, 132)',
-                        borderColor: 'rgb(255, 99, 132)',
-                        data: vote
-                    }]
-                },
-                // Configuration options go here
-                options: {}
-            });
+           
+          
+
+
         }
         firstImageElement.removeEventListener('click', handleClick);
         secondImageElement.removeEventListener('click', handleClick);
@@ -153,8 +148,66 @@ function setMax(event) {
     console.log(maxAttempt);
 }
 
+var btnRes = document.getElementById('btnResult');
+btnRes.addEventListener('click', showResult );
+
+function showResult (){
+
+    productStorage();
+    getData();
+    showChart();
+}
+
+ ////// Chart 
+function showChart (){
+
+    var ctx = document.getElementById('productChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'bar',
+
+        // The data for our dataset
+        data: {
+            labels: names,
+            datasets: [{
+                label: 'Vote Time',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: vote  },
+                {
+                    label: 'Showen Time',
+                backgroundColor: 'rgb(225, 99, 1)',
+                borderColor: 'rgb(255, 99, 32)',
+                data:  showenTime
+                }
+        ]
+        },
+        // Configuration options go here
+        options: {}
+    });
+}
 
 ////Names Array
 for (var i = 0; i < Products.prototype.allProducts.length; i++) {
     names.push(Products.prototype.allProducts[i].name);
 }
+
+
+//////////// set Storage
+function productStorage (){
+    var localProduct =JSON.stringify(Products.prototype.allProducts);
+    localStorage.setItem('products',localProduct);
+}
+
+//// fun. to retrive data in the Array , parse them & save them 
+function getData (){
+    var ProductList =localStorage.getItem('products');
+    var jsProductList = JSON.parse(ProductList);
+
+    if(jsProductList != null )
+    Products.prototype.allProducts = jsProductList ;
+
+    console.log(jsProductList);
+}
+getData();
+
