@@ -3,43 +3,58 @@
 header{
     position: sticky;
     background: rgb(61, 84, 187);
-
     top: 0%;
-    width: 100%;
+    width: 70%;
     height: 100%;
     }
 
 /* main */
+
 body{
+    right: 30%;
     width: 100%;
-    margin: 150px
-    border-top-right-radius: 15px;
-    border-top-left-radius: 15px;
-}
+    margin: 100px;
+    background:rgba(255, 255, 255, 0.932);
+    border-top-right-radius : 15px;
+    border-top-left-radius : 15px; 
 }
 
+main{
+    margin-top: 20px;
+    width: 70%;
+    display: grid;
+    background: thistle;
+    grid-template-columns: 1fr 3fr;
+    height: 900px; 
+
+   
+    }
+
 main div {
-    border: 50% palevioletred ;
-     
+    right: 30%;
+    margin: 30px;
     position: absolute;
     display: inline-block;
+    height: 40%;
+    top: 40% ;
+
 }
 
 div img {
-    width: 30%;
-    height: 30%;
+    border: 9px groove teal;
+    padding: 3px;
+    width: 120px;
+    height: 120px;
+    left:  70%;
+    /* background: rgb(124, 1, 124); */
 }
-
-
-
 
 /* Footer */
 footer{
     position: sticky;
     background: rgb(61, 84, 187);
-    width: 100%;
-    height: 100%;
-    bottom: 0%;
-
-
+    width: 70%;
+    height: 50px; 
+    top: 900%;
+    text-align: center;
 }
